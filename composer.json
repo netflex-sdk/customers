@@ -1,0 +1,28 @@
+{
+  "name": "apility/netflex-customers",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Olav Øyen",
+      "email": "olav@apility.no"
+    },
+    {
+      "name": "Thomas Alrek",
+      "email": "thomas@apility.no"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Netflex\\Customers\\": "src/"
+    }
+  },
+  "require": {
+    "apility/netflex-api": "^1.0",
+    "apility/netflex-support": "^1.0"
+  },
+  "require-dev": {
+    "vlucas/phpdotenv": "^3.6",
+    "larapack/dd": "^1.1"
+  }
+}

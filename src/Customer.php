@@ -30,6 +30,7 @@ use Netflex\Customers\Traits\API\Customers as CustomersAPI;
  * @property bool $has_error
  * @property bool $password_reset
  * @property SegmentData[] $segmentData
+ * @property GroupCollection[] $groups
  * */
 
 class Customer extends ReactiveObject
@@ -40,12 +41,14 @@ class Customer extends ReactiveObject
   /** @var string */
   protected static $base_path = 'relations/customers/customer';
 
+  /** @var array */
   protected $defaults = [
     'id' => null,
     'firstname' => null,
     'surname' => null,
   ];
 
+  /** @var array */
   protected $readOnlyAttributes = [
     'id', 'user_hash',
   ];
@@ -129,6 +132,18 @@ class Customer extends ReactiveObject
   public function getSegmentDataAttribute($segmentData)
   {
     return SegmentData::factory($segmentData);
+  }
+
+  /**
+   * @param mixed $groups
+   * @return CartItemCollection
+   */
+  public function getGroupsAttribute($groups = [])
+  {
+    return GroupCollection::factory($groups, $this)
+      ->addHook('modified', function ($items) {
+        $this->__set('groups', $items->jsonSerialize());
+      });
   }
 
 }

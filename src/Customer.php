@@ -134,16 +134,4 @@ class Customer extends ReactiveObject
     return SegmentData::factory($segmentData);
   }
 
-  /**
-   * @param mixed $groups
-   * @return CartItemCollection
-   */
-  public function getGroupsAttribute($groups = [])
-  {
-    return GroupCollection::factory($groups, $this)
-      ->addHook('modified', function ($items) {
-        $this->__set('groups', $items->jsonSerialize());
-      });
-  }
-
 }

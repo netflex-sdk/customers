@@ -1,1 +1,1 @@
-# Netflex Commerce API
+# Netflex Customers API

@@ -136,6 +136,21 @@ class Customer extends ReactiveObject
   }
 
   /**
+   * Resolve a Customer by username or email
+   *
+   * @param array $credentials
+   * @return void
+   */
+  public static function resolve($credentials) {
+    $emailOrUsername = $credentials['email'] ?? $credentials['username'] ?? null;
+    $api = API::getClient();
+
+    $attributes = $api->get('customers/customer/resolve/' . $emailOrUsername);
+
+    return new static($attributes);
+  }
+
+  /**
    * Attempts to authenticate with the given credentials.
    * If authenticate succeeds, we return the Customer instance
    *
@@ -145,7 +160,7 @@ class Customer extends ReactiveObject
   public static function authenticate($credentials)
   {
     $emailOrUsername = $credentials['email'] ?? $credentials['username'] ?? null;
-    $field = $credentials['email'] ? 'mail' : ($credentials['username'] ? 'username' : null);
+    $field = array_key_exists('email', $credentials) ? 'mail' : (array_key_exists('username', $credentials) ? 'username' : null);
     $group = $credentials['group'] ?? null;
 
     $api = API::getClient();

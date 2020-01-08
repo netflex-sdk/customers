@@ -145,7 +145,7 @@ class Customer extends ReactiveObject
     $emailOrUsername = $credentials['email'] ?? $credentials['username'] ?? null;
     $api = API::getClient();
 
-    $attributes = $api->get('customers/customer/resolve/' . $emailOrUsername);
+    $attributes = $api->get('relations/customers/customer/resolve/' . $emailOrUsername);
 
     return new static($attributes);
   }

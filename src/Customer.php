@@ -6,6 +6,7 @@ use Netflex\API;
 use Netflex\Support\Retrievable;
 use Netflex\Support\ReactiveObject;
 use Netflex\Customers\Traits\API\Customers as CustomersAPI;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 /**
  * @property-read int $id
@@ -32,9 +33,8 @@ use Netflex\Customers\Traits\API\Customers as CustomersAPI;
  * @property bool $password_reset
  * @property SegmentData[] $segmentData
  * @property GroupCollection[] $groups
- * */
-
-class Customer extends ReactiveObject
+ **/
+class Customer extends ReactiveObject implements Authenticatable
 {
   use CustomersAPI;
   use Retrievable;
@@ -136,18 +136,82 @@ class Customer extends ReactiveObject
   }
 
   /**
+   * Get the name of the unique identifier for the user.
+   *
+   * @return string
+   */
+  public function getAuthIdentifierName()
+  {
+    return 'id';
+  }
+
+  /**
+   * Get the unique identifier for the user.
+   *
+   * @return mixed
+   */
+  public function getAuthIdentifier()
+  {
+    return $this->{$this->getAuthIdentifier()};
+  }
+
+  /**
+   * Get the password for the user.
+   *
+   * @return string
+   */
+  public function getAuthPassword()
+  {
+    return null;
+  }
+
+  /**
+   * Get the token value for the "remember me" session.
+   *
+   * @return string
+   */
+  public function getRememberToken()
+  {
+    return null;
+  }
+
+  /**
+   * Set the token value for the "remember me" session.
+   *
+   * @param  string  $value
+   * @return void
+   */
+  public function setRememberToken($value)
+  {
+    return;
+  }
+
+  /**
+   * Get the column name for the "remember me" token.
+   *
+   * @return string
+   */
+  public function getRememberTokenName()
+  {
+    return null;
+  }
+
+  /**
    * Resolve a Customer by username or email
    *
    * @param array $credentials
    * @return void
    */
-  public static function resolve($credentials) {
+  public static function resolve($credentials)
+  {
     $emailOrUsername = $credentials['email'] ?? $credentials['username'] ?? null;
     $api = API::getClient();
 
     $attributes = $api->get('relations/customers/customer/resolve/' . $emailOrUsername);
 
-    return new static($attributes);
+    if ($attributes) {
+      return new static($attributes);
+    }
   }
 
   /**
@@ -166,6 +230,7 @@ class Customer extends ReactiveObject
     $api = API::getClient();
     $response = $api->post('relations/customers/auth', [
       'username' => $emailOrUsername,
+      'password' => $credentials['password'] ?? null,
       'field' => $field,
       'group' => $group
     ]);

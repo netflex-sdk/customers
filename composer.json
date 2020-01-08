@@ -19,7 +19,8 @@
   },
   "require": {
     "apility/netflex-api": "^1.0",
-    "apility/netflex-support": "^1.0"
+    "apility/netflex-support": "^1.0",
+    "illuminate/contracts": "^6.10"
   },
   "require-dev": {
     "vlucas/phpdotenv": "^3.6",

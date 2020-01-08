@@ -2,6 +2,7 @@
 
 namespace Netflex\Customers;
 
+use Netflex\API;
 use Netflex\Support\Retrievable;
 use Netflex\Support\ReactiveObject;
 use Netflex\Customers\Traits\API\Customers as CustomersAPI;
@@ -134,4 +135,28 @@ class Customer extends ReactiveObject
     return SegmentData::factory($segmentData);
   }
 
+  /**
+   * Attempts to authenticate with the given credentials.
+   * If authenticate succeeds, we return the Customer instance
+   *
+   * @param array $credentials
+   * @return static|null
+   */
+  public static function authenticate($credentials)
+  {
+    $emailOrUsername = $credentials['email'] ?? $credentials['username'] ?? null;
+    $field = $credentials['email'] ? 'mail' : ($credentials['username'] ? 'username' : null);
+    $group = $credentials['group'] ?? null;
+
+    $api = API::getClient();
+    $response = $api->post('relations/customers/auth', [
+      'username' => $emailOrUsername,
+      'field' => $field,
+      'group' => $group
+    ]);
+
+    if ($response->authenticated) {
+      return static::retrieve($response->passed->customer_id);
+    }
+  }
 }

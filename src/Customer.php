@@ -152,7 +152,7 @@ class Customer extends ReactiveObject implements Authenticatable
    */
   public function getAuthIdentifier()
   {
-    return $this->{$this->getAuthIdentifier()};
+    return $this->{$this->getAuthIdentifierName()};
   }
 
   /**
@@ -172,7 +172,7 @@ class Customer extends ReactiveObject implements Authenticatable
    */
   public function getRememberToken()
   {
-    return null;
+    return $this->{$this->getRememberTokenName()};
   }
 
   /**
@@ -193,7 +193,7 @@ class Customer extends ReactiveObject implements Authenticatable
    */
   public function getRememberTokenName()
   {
-    return null;
+    return 'token';
   }
 
   /**

@@ -15,6 +15,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
  * @property int $group_id
  * @property string $firstname
  * @property string $surname
+ * @property string $name
  * @property string $company
  * @property int $companyId
  * @property string $mail
@@ -53,6 +54,13 @@ class Customer extends ReactiveObject implements Authenticatable
   protected $readOnlyAttributes = [
     'id', 'user_hash',
   ];
+
+  /**
+   * @return string
+   */
+  public function getNameAttribute () {
+    return trim($this->firstname . ' ' . $this->surname);
+  }
 
   /**
    * @param int $score
@@ -199,12 +207,13 @@ class Customer extends ReactiveObject implements Authenticatable
   /**
    * Resolve a Customer by username or email
    *
-   * @param array $credentials
+   * @param string|array $credentials
    * @return void
    */
   public static function resolve($credentials)
   {
-    $emailOrUsername = $credentials['email'] ?? $credentials['username'] ?? null;
+    $emailOrUsername = is_string($credentials) ? $credentials : [];
+    $emailOrUsername = $credentials['email'] ?? $credentials['username'] ?? $credentials;
     $api = API::getClient();
 
     $attributes = $api->get('relations/customers/customer/resolve/' . $emailOrUsername);

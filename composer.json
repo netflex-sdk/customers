@@ -1,5 +1,5 @@
 {
-  "name": "apility/netflex-customers",
+  "name": "netflex/customers",
   "type": "library",
   "license": "MIT",
   "authors": [
@@ -17,10 +17,17 @@
       "Netflex\\Customers\\": "src/"
     }
   },
+  "config": {
+    "platform": {
+      "php": "7.3"
+    },
+    "sort-packages": true
+  },
   "require": {
-    "apility/netflex-api": "^1.0",
-    "apility/netflex-support": "^1.0",
-    "illuminate/contracts": "^6.10"
+    "illuminate/contracts": "^6.10",
+    "netflex/api": "^2.0",
+    "netflex/support": "2.0",
+    "php": "^7.3"
   },
   "require-dev": {
     "vlucas/phpdotenv": "^3.6",

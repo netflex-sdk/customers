@@ -4,88 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "dee9317a6748dc9dc65c18427ebd4b0a",
+    "content-hash": "a454be3f28f150bd57b00366128c34f8",
     "packages": [
-        {
-            "name": "apility/netflex-api",
-            "version": "v1.0.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/apility/netflex-api.git",
-                "reference": "6a4bf5d8d990fe37c31b54020790905ec531ef01"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/apility/netflex-api/zipball/6a4bf5d8d990fe37c31b54020790905ec531ef01",
-                "reference": "6a4bf5d8d990fe37c31b54020790905ec531ef01",
-                "shasum": ""
-            },
-            "require": {
-                "guzzlehttp/guzzle": "^6.3"
-            },
-            "require-dev": {
-                "vlucas/phpdotenv": "^3.6"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Netflex\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Thomas Alrek",
-                    "email": "thomas@apility.no"
-                }
-            ],
-            "time": "2019-10-17T11:44:37+00:00"
-        },
-        {
-            "name": "apility/netflex-support",
-            "version": "v1.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/apility/netflex-support.git",
-                "reference": "ca74ac3e04214575f4f148ff36f5b5dc723c0477"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/apility/netflex-support/zipball/ca74ac3e04214575f4f148ff36f5b5dc723c0477",
-                "reference": "ca74ac3e04214575f4f148ff36f5b5dc723c0477",
-                "shasum": ""
-            },
-            "require": {
-                "apility/netflex-api": "^1.0",
-                "nesbot/carbon": "^2.28",
-                "tightenco/collect": "^6.3"
-            },
-            "require-dev": {
-                "larapack/dd": "^1.1",
-                "phpunit/phpunit": "^8.5",
-                "vlucas/phpdotenv": "^3.6"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Netflex\\Support\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Thomas Alrek",
-                    "email": "thomas@apility.no"
-                }
-            ],
-            "time": "2019-12-19T11:47:09+00:00"
-        },
         {
             "name": "guzzlehttp/guzzle",
             "version": "6.5.2",
@@ -388,6 +308,86 @@
                 "time"
             ],
             "time": "2019-12-16T16:30:25+00:00"
+        },
+        {
+            "name": "netflex/api",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/netflex-sdk/api.git",
+                "reference": "9b31d91e235287d9a355880d1df501b8e5d992ce"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/netflex-sdk/api/zipball/9b31d91e235287d9a355880d1df501b8e5d992ce",
+                "reference": "9b31d91e235287d9a355880d1df501b8e5d992ce",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.3"
+            },
+            "require-dev": {
+                "vlucas/phpdotenv": "^3.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Netflex\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Alrek",
+                    "email": "thomas@apility.no"
+                }
+            ],
+            "time": "2020-01-10T14:01:31+00:00"
+        },
+        {
+            "name": "netflex/support",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/netflex-sdk/support.git",
+                "reference": "0489a6a15a30f5fdee38b0a5be046e6a5fd7d66b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/netflex-sdk/support/zipball/0489a6a15a30f5fdee38b0a5be046e6a5fd7d66b",
+                "reference": "0489a6a15a30f5fdee38b0a5be046e6a5fd7d66b",
+                "shasum": ""
+            },
+            "require": {
+                "nesbot/carbon": "^2.28",
+                "netflex/api": "^2.0",
+                "tightenco/collect": "^6.3"
+            },
+            "require-dev": {
+                "larapack/dd": "^1.1",
+                "phpunit/phpunit": "^8.5",
+                "vlucas/phpdotenv": "^3.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Netflex\\Support\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Alrek",
+                    "email": "thomas@apility.no"
+                }
+            ],
+            "time": "2020-01-10T14:21:20+00:00"
         },
         {
             "name": "psr/container",
@@ -1108,6 +1108,11 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": []
+    "platform": {
+        "php": "^7.3"
+    },
+    "platform-dev": [],
+    "platform-overrides": {
+        "php": "7.3"
+    }
 }

@@ -1,5 +1,6 @@
 {
   "name": "netflex/customers",
+  "description": "Netflex Customers library",
   "type": "library",
   "license": "MIT",
   "authors": [

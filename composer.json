@@ -26,6 +26,7 @@
   },
   "require": {
     "php": "^7.3",
+    "illuminate/auth": "^6.11",
     "illuminate/contracts": "^6.10",
     "netflex/api": "^2.0",
     "netflex/structure": "dev-master",
@@ -34,5 +35,15 @@
   "require-dev": {
     "vlucas/phpdotenv": "^3.6",
     "larapack/dd": "^1.1"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Netflex\\Customers\\Providers\\AuthServiceProvider"
+      ],
+      "aliases": {
+        "Customer": "Netflex\\Customers\\Customer"
+      }
+    }
   }
 }

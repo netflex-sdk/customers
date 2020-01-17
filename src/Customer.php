@@ -3,10 +3,8 @@
 namespace Netflex\Customers;
 
 use Netflex\API;
-use Netflex\Support\Retrievable;
-use Netflex\Support\ReactiveObject;
-use Netflex\Customers\Traits\API\Customers as CustomersAPI;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Netflex\Structure\Adapters\EloquentAdapter as Model;
 
 /**
  * @property-read int $id
@@ -35,112 +33,65 @@ use Illuminate\Contracts\Auth\Authenticatable;
  * @property SegmentData[] $segmentData
  * @property GroupCollection[] $groups
  **/
-class Customer extends ReactiveObject implements Authenticatable
+class Customer extends Model implements Authenticatable
 {
-  use CustomersAPI;
-  use Retrievable;
+  protected $relation = 'customer';
 
-  /** @var string */
-  protected static $base_path = 'relations/customers/customer';
+  protected $relationId = null;
 
-  /** @var array */
-  protected $defaults = [
-    'id' => null,
-    'firstname' => null,
-    'surname' => null,
-  ];
-
-  /** @var array */
-  protected $readOnlyAttributes = [
-    'id', 'user_hash',
-  ];
+  protected $resolvableField = 'mail';
 
   /**
-   * @return string
+   * Retrieves a record by key
+   *
+   * @param int|null $relationId
+   * @param mixed $key
+   * @return array|null
    */
-  public function getNameAttribute () {
-    return trim($this->firstname . ' ' . $this->surname);
+  protected function performRetrieveRequest(?int $relationId = null, $key)
+  {
+    return API::getClient()
+      ->get('relations/customers/customer/' . $key, true);
   }
 
   /**
-   * @param int $score
+   * Inserts a new record, and returns its id
+   *
+   * @property int|null $relationId
+   * @property array $attributes
+   * @return mixed
+   */
+  protected function performInsertRequest(?int $relationId = null, array $attributes = [])
+  {
+    $response = API::getClient()
+      ->post('relations/customers/customer', $attributes);
+
+    return $response->customer_id;
+  }
+
+  /**
+   * Updates a record
+   *
+   * @param int|null $relationId
+   * @param mixed $key
+   * @param array $attributes
+   * @return void
+   */
+  protected function performUpdateRequest(?int $relationId = null, $key, $attributes = [])
+  {
+    return API::getClient()->put('relations/customers/customer/' . $key, $attributes);
+  }
+
+  /**
+   * Deletes a record
+   *
+   * @param int|null $relationId
+   * @param mixed $key
    * @return bool
    */
-  public function getScoreAttribute($score)
+  protected function performDeleteRequest(?int $relationId = null, $key)
   {
-    return (int) $score;
-  }
-
-  /**
-   * @param int $groupId
-   * @return bool
-   */
-  public function getGroupIdAttribute($groupId)
-  {
-    return (int) $groupId;
-  }
-
-  /**
-   * @param int $companyId
-   * @return bool
-   */
-  public function getCompanyIdAttribute($companyId)
-  {
-    return (int) $companyId;
-  }
-
-  /**
-   * @param int $no_newsletter
-   * @return bool
-   */
-  public function getNoNewsletterAttribute($no_newsletter)
-  {
-    return (bool) $no_newsletter;
-  }
-
-  /**
-   * @param int $no_sms
-   * @return bool
-   */
-  public function getNoSmsAttribute($no_sms)
-  {
-    return (bool) $no_sms;
-  }
-
-  /**
-   * @param int $no_sms
-   * @return bool
-   */
-  public function getUseTimeAttribute($use_time)
-  {
-    return (bool) $use_time;
-  }
-
-  /**
-   * @param int $has_error
-   * @return bool
-   */
-  public function getHasErrorAttribute($has_error)
-  {
-    return (bool) $has_error;
-  }
-
-  /**
-   * @param int $password_reset
-   * @return bool
-   */
-  public function getPasswordResetAttribute($password_reset)
-  {
-    return (bool) $password_reset;
-  }
-
-  /**
-   * @param object|array|null $segmentData
-   * @return SegmentData
-   */
-  public function getSegmentDataAttribute($segmentData)
-  {
-    return SegmentData::factory($segmentData);
+    return false;
   }
 
   /**
@@ -202,50 +153,5 @@ class Customer extends ReactiveObject implements Authenticatable
   public function getRememberTokenName()
   {
     return 'token';
-  }
-
-  /**
-   * Resolve a Customer by username or email
-   *
-   * @param string|array $credentials
-   * @return void
-   */
-  public static function resolve($credentials)
-  {
-    $emailOrUsername = is_string($credentials) ? $credentials : [];
-    $emailOrUsername = $credentials['email'] ?? $credentials['username'] ?? $credentials;
-    $api = API::getClient();
-
-    $attributes = $api->get('relations/customers/customer/resolve/' . $emailOrUsername);
-
-    if ($attributes) {
-      return new static($attributes);
-    }
-  }
-
-  /**
-   * Attempts to authenticate with the given credentials.
-   * If authenticate succeeds, we return the Customer instance
-   *
-   * @param array $credentials
-   * @return static|null
-   */
-  public static function authenticate($credentials)
-  {
-    $emailOrUsername = $credentials['email'] ?? $credentials['username'] ?? null;
-    $field = array_key_exists('email', $credentials) ? 'mail' : (array_key_exists('username', $credentials) ? 'username' : null);
-    $group = $credentials['group'] ?? null;
-
-    $api = API::getClient();
-    $response = $api->post('relations/customers/auth', [
-      'username' => $emailOrUsername,
-      'password' => $credentials['password'] ?? null,
-      'field' => $field,
-      'group' => $group
-    ]);
-
-    if ($response->authenticated) {
-      return static::retrieve($response->passed->customer_id);
-    }
   }
 }

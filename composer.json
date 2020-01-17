@@ -25,10 +25,11 @@
     "sort-packages": true
   },
   "require": {
+    "php": "^7.3",
     "illuminate/contracts": "^6.10",
     "netflex/api": "^2.0",
-    "netflex/support": "2.0",
-    "php": "^7.3"
+    "netflex/structure": "dev-master",
+    "netflex/support": "^2.0"
   },
   "require-dev": {
     "vlucas/phpdotenv": "^3.6",

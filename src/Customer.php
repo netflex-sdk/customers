@@ -154,4 +154,30 @@ class Customer extends Model implements Authenticatable
   {
     return 'token';
   }
+
+  /**
+   * Attempts to authenticate with the given credentials.
+   * If authenticate succeeds, we return the Customer instance
+   *
+   * @param array $credentials
+   * @return static|null
+   */
+  public static function authenticate($credentials)
+  {
+    $emailOrUsername = $credentials['email'] ?? $credentials['username'] ?? null;
+    $field = array_key_exists('email', $credentials) ? 'mail' : (array_key_exists('username', $credentials) ? 'username' : null);
+    $group = $credentials['group'] ?? null;
+
+    $api = API::getClient();
+    $response = $api->post('relations/customers/auth', [
+      'username' => $emailOrUsername,
+      'password' => $credentials['password'] ?? null,
+      'field' => $field,
+      'group' => $group
+    ]);
+
+    if ($response->authenticated) {
+      return static::find($response->passed->customer_id);
+    }
+  }
 }

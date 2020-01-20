@@ -29,7 +29,7 @@
     "illuminate/auth": "^6.11",
     "illuminate/contracts": "^6.10",
     "netflex/api": "^2.0",
-    "netflex/structure": "dev-master",
+    "netflex/query-builder": "^1.0",
     "netflex/support": "^2.0"
   },
   "require-dev": {

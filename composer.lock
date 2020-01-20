@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "92df424561f8013e086603b5dfaff7b2",
+    "content-hash": "2bdc6b7ae5729a61732ab4e3c575303e",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -513,51 +513,6 @@
             "time": "2020-01-14T14:10:23+00:00"
         },
         {
-            "name": "illuminate/events",
-            "version": "v6.11.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/illuminate/events.git",
-                "reference": "3824f9de770b370d120ca333aeffb521466c6dab"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/events/zipball/3824f9de770b370d120ca333aeffb521466c6dab",
-                "reference": "3824f9de770b370d120ca333aeffb521466c6dab",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/container": "^6.0",
-                "illuminate/contracts": "^6.0",
-                "illuminate/support": "^6.0",
-                "php": "^7.2"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "6.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Illuminate\\Events\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Taylor Otwell",
-                    "email": "taylor@laravel.com"
-                }
-            ],
-            "description": "The Illuminate Events package.",
-            "homepage": "https://laravel.com",
-            "time": "2020-01-07T13:47:03+00:00"
-        },
-        {
             "name": "illuminate/filesystem",
             "version": "v6.11.0",
             "source": {
@@ -988,15 +943,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/netflex-sdk/query-builder.git",
-                "reference": "8d8ee3132baf1879a4f8e4ac36a642a5cd18b0ab"
+                "reference": "c4afaa5cfd17ba52f1e3fb128aa565a1fa63cb58"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/netflex-sdk/query-builder/zipball/8d8ee3132baf1879a4f8e4ac36a642a5cd18b0ab",
-                "reference": "8d8ee3132baf1879a4f8e4ac36a642a5cd18b0ab",
+                "url": "https://api.github.com/repos/netflex-sdk/query-builder/zipball/c4afaa5cfd17ba52f1e3fb128aa565a1fa63cb58",
+                "reference": "c4afaa5cfd17ba52f1e3fb128aa565a1fa63cb58",
                 "shasum": ""
             },
             "require": {
+                "illuminate/database": "^6.11",
                 "illuminate/support": "^6.11",
                 "netflex/api": "^2.0",
                 "php": "^7.3"
@@ -1011,7 +967,7 @@
                         "Netflex\\Query\\Providers\\QueryBuilderServiceProvider"
                     ],
                     "aliases": {
-                        "QueryBuilder": "Netflex\\Query\\Facades\\QueryBuilderFacade"
+                        "Query": "Netflex\\Query\\Facades\\QueryBuilderFacade"
                     }
                 }
             },
@@ -1039,48 +995,7 @@
                 "netflex",
                 "query"
             ],
-            "time": "2020-01-17T15:41:49+00:00"
-        },
-        {
-            "name": "netflex/structure",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/netflex-sdk/structure.git",
-                "reference": "507af971060ed80dbb6fcdac7f7e53174d24493b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/netflex-sdk/structure/zipball/507af971060ed80dbb6fcdac7f7e53174d24493b",
-                "reference": "507af971060ed80dbb6fcdac7f7e53174d24493b",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/container": "^6.11",
-                "illuminate/contracts": "^6.10",
-                "illuminate/database": "^6.11",
-                "illuminate/events": "^6.11",
-                "nesbot/carbon": "^2.28",
-                "netflex/api": "^2.0",
-                "netflex/query-builder": "^1.0",
-                "netflex/support": "^2.0",
-                "php": "^7.3"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Netflex\\Structure\\": "src/"
-                },
-                "files": [
-                    "src/helpers.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Netflex Structure library",
-            "time": "2020-01-17T17:27:42+00:00"
+            "time": "2020-01-20T08:17:50+00:00"
         },
         {
             "name": "netflex/support",
@@ -2801,9 +2716,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "netflex/structure": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

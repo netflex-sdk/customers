@@ -4,7 +4,7 @@ namespace Netflex\Customers;
 
 use Netflex\API;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Netflex\Structure\Adapters\EloquentAdapter as Model;
+use Netflex\Query\QueryableModel as Model;
 
 /**
  * @property-read int $id

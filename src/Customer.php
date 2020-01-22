@@ -2,7 +2,7 @@
 
 namespace Netflex\Customers;
 
-use Netflex\API;
+use Netflex\API\Facades\API;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Netflex\Query\QueryableModel as Model;
 
@@ -50,8 +50,7 @@ class Customer extends Model implements Authenticatable
    */
   protected function performRetrieveRequest(?int $relationId = null, $key)
   {
-    return API::getClient()
-      ->get('relations/customers/customer/' . $key, true);
+    return API::get('relations/customers/customer/' . $key, true);
   }
 
   /**
@@ -63,8 +62,7 @@ class Customer extends Model implements Authenticatable
    */
   protected function performInsertRequest(?int $relationId = null, array $attributes = [])
   {
-    $response = API::getClient()
-      ->post('relations/customers/customer', $attributes);
+    $response = API::post('relations/customers/customer', $attributes);
 
     return $response->customer_id;
   }
@@ -79,7 +77,7 @@ class Customer extends Model implements Authenticatable
    */
   protected function performUpdateRequest(?int $relationId = null, $key, $attributes = [])
   {
-    return API::getClient()->put('relations/customers/customer/' . $key, $attributes);
+    return API::put('relations/customers/customer/' . $key, $attributes);
   }
 
   /**

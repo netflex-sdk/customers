@@ -2,19 +2,28 @@
 
 require_once(__DIR__ . '/vendor/autoload.php');
 
-use Netflex\API;
-use Dotenv\Dotenv;
-
 use Netflex\Customers\Customer;
+use Netflex\API\Providers\APIServiceProvider;
+
+// ####### Bootstrapping #######
+use Dotenv\Dotenv;
+use Illuminate\Container\Container;
+use Illuminate\Support\Facades\Facade;
 
 Dotenv::create(__DIR__)->load();
 
-API::setCredentials(
-  getenv('NETFLEX_PUBLIC_KEY'),
-  getenv('NETFLEX_PRIVATE_KEY'),
-);
+$container = new Container;
 
-$customer = Customer::retrieve(119);
+$container['config'] = [
+  'api.publicKey' => getenv('NETFLEX_PUBLIC_KEY'),
+  'api.privateKey' => getenv('NETFLEX_PRIVATE_KEY'),
+];
+
+(new APIServiceProvider($container))->register();
+
+Facade::setFacadeApplication($container);
+
+// ####### Testcode #######
+$customer = Customer::find(119);
 
 dd($customer);
-dd($customer, json_encode($customer, JSON_PRETTY_PRINT));

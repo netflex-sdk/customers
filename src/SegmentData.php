@@ -4,6 +4,7 @@ namespace Netflex\Customers;
 
 use Carbon\Carbon;
 use Netflex\Support\ReactiveObject;
+
 /**
  * @property string $gender
  * @property string $photo
@@ -45,7 +46,7 @@ class SegmentData extends ReactiveObject
     return (int) $bornDay;
   }
 
-   /**
+  /**
    * @param int $bornMonth
    * @return boolean
    */
@@ -54,7 +55,7 @@ class SegmentData extends ReactiveObject
     return (int) $bornMonth;
   }
 
-   /**
+  /**
    * @param int $bornYear
    * @return boolean
    */
@@ -63,7 +64,7 @@ class SegmentData extends ReactiveObject
     return (int) $bornYear;
   }
 
-   /**
+  /**
    * @param string|datetime $birthday
    * @return mixed
    */
@@ -71,5 +72,4 @@ class SegmentData extends ReactiveObject
   {
     return $birthday ? Carbon::parse($birthday) : $birthday;
   }
-
 }

@@ -17,7 +17,7 @@ use Netflex\Customers\Traits\API\Groups as GroupsAPI;
 
 class Group extends ReactiveObject
 {
-  
+
   use GroupsAPI;
   use Retrievable;
 
@@ -26,5 +26,4 @@ class Group extends ReactiveObject
 
   /** @var string */
   protected static $base_path = 'relations/customers/groups';
-    
 }

@@ -72,7 +72,7 @@ class AuthServiceProvider extends ServiceProvider implements UserProvider
       return;
     }
 
-    return Customer::resolve($credentials);
+    return Customer::authenticate($credentials);
   }
 
   /**

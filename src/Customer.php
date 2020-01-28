@@ -166,8 +166,7 @@ class Customer extends Model implements Authenticatable
     $field = array_key_exists('email', $credentials) ? 'mail' : (array_key_exists('username', $credentials) ? 'username' : null);
     $group = $credentials['group'] ?? null;
 
-    $api = API::getClient();
-    $response = $api->post('relations/customers/auth', [
+    $response = API::post('relations/customers/auth', [
       'username' => $emailOrUsername,
       'password' => $credentials['password'] ?? null,
       'field' => $field,

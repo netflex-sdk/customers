@@ -2,6 +2,7 @@
 
 namespace Netflex\Customers;
 
+use Exception;
 use Netflex\API\Facades\API;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Netflex\Query\QueryableModel as Model;
@@ -166,15 +167,19 @@ class Customer extends Model implements Authenticatable
     $field = (array_key_exists('email', $credentials) || array_key_exists('mail', $credentials)) ? 'mail' : (array_key_exists('username', $credentials) ? 'username' : null);
     $group = $credentials['group'] ?? null;
 
-    $response = API::post('relations/customers/auth', [
-      'username' => $emailOrUsername,
-      'password' => $credentials['password'] ?? null,
-      'field' => $field,
-      'group' => $group
-    ]);
+    try {
+      $response = API::post('relations/customers/auth', [
+        'username' => $emailOrUsername,
+        'password' => $credentials['password'] ?? null,
+        'field' => $field,
+        'group' => $group
+      ]);
 
-    if ($response->authenticated) {
-      return static::find($response->passed->customer_id);
+      if ($response->authenticated) {
+        return static::find($response->passed->customer_id);
+      }
+    } catch (Exception $e) {
+      return;
     }
   }
 }

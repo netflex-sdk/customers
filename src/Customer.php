@@ -162,8 +162,8 @@ class Customer extends Model implements Authenticatable
    */
   public static function authenticate($credentials)
   {
-    $emailOrUsername = $credentials['email'] ?? $credentials['username'] ?? null;
-    $field = array_key_exists('email', $credentials) ? 'mail' : (array_key_exists('username', $credentials) ? 'username' : null);
+    $emailOrUsername = $credentials['email'] ?? $credentials['mail'] ?? $credentials['username'] ?? null;
+    $field = (array_key_exists('email', $credentials) || array_key_exists('mail', $credentials)) ? 'mail' : (array_key_exists('username', $credentials) ? 'username' : null);
     $group = $credentials['group'] ?? null;
 
     $response = API::post('relations/customers/auth', [

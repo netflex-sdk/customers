@@ -31,7 +31,7 @@ class AuthServiceProvider extends ServiceProvider implements UserProvider
    */
   public function retrieveById($identifier)
   {
-    return Customer::retrieve($identifier);
+    return Customer::find($identifier);
   }
 
   /**

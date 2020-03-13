@@ -28,9 +28,9 @@
     "php": "^7.3",
     "illuminate/auth": "^7.0",
     "illuminate/contracts": "^7.0",
-    "netflex/api": "^2.0.0-RC2",
-    "netflex/query-builder": "^2.0.0-RC6",
-    "netflex/support": "^2.0.0-RC2"
+    "netflex/api": "^2.0",
+    "netflex/query-builder": "^2.0",
+    "netflex/support": "^2.0"
   },
   "require-dev": {
     "illuminate/container": "^7.0",
@@ -38,6 +38,8 @@
     "larapack/dd": "^1.1",
     "vlucas/phpdotenv": "^3.6"
   },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "extra": {
     "laravel": {
       "providers": [

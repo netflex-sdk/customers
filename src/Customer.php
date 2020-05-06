@@ -18,6 +18,7 @@ use Netflex\Query\QueryableModel as Model;
  * @property string $company
  * @property int $companyId
  * @property string $mail
+ * @property string $email
  * @property string $phone
  * @property string $phone_countrycode
  * @property string $username
@@ -181,5 +182,15 @@ class Customer extends Model implements Authenticatable
     } catch (Exception $e) {
       return;
     }
+  }
+
+  /**
+   * Alias for mail field
+   *
+   * @return string
+   */
+  public function getEmailAttribute()
+  {
+    return $this->mail;
   }
 }

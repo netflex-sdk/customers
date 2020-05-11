@@ -26,18 +26,20 @@
   },
   "require": {
     "php": "^7.3",
-    "illuminate/auth": "^6.11",
-    "illuminate/contracts": "^6.10",
-    "netflex/api": "^3.0",
+    "illuminate/auth": "^7.0",
+    "illuminate/contracts": "^7.0",
+    "netflex/api": "^2.0",
     "netflex/query-builder": "^2.0",
-    "netflex/support": "^3.0"
+    "netflex/support": "^2.0"
   },
   "require-dev": {
-    "illuminate/container": "^6.12",
-    "illuminate/support": "^6.12",
+    "illuminate/container": "^7.0",
+    "illuminate/support": "^7.0",
     "larapack/dd": "^1.1",
     "vlucas/phpdotenv": "^3.6"
   },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "extra": {
     "laravel": {
       "providers": [

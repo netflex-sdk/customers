@@ -18,6 +18,7 @@ use Netflex\Query\QueryableModel as Model;
  * @property string $company
  * @property int $companyId
  * @property string $mail
+ * @property string $email
  * @property string $phone
  * @property string $phone_countrycode
  * @property string $username
@@ -33,6 +34,7 @@ use Netflex\Query\QueryableModel as Model;
  * @property bool $password_reset
  * @property SegmentData[] $segmentData
  * @property GroupCollection[] $groups
+ * @property-read array $channels
  **/
 class Customer extends Model implements Authenticatable
 {
@@ -181,5 +183,33 @@ class Customer extends Model implements Authenticatable
     } catch (Exception $e) {
       return;
     }
+  }
+
+  /**
+   * Alias for mail field
+   *
+   * @return string
+   */
+  public function getEmailAttribute()
+  {
+    return $this->mail;
+  }
+
+  /**
+   * @return array
+   */
+  public function getChannelsAttribute()
+  {
+    $channels = [];
+
+    if (!$this->no_newsletter) {
+      $channels[] = 'mail';
+    }
+
+    if (!$this->no_sms) {
+      $channels[] = 'sms';
+    }
+
+    return $channels;
   }
 }

@@ -11,6 +11,14 @@ use Illuminate\Auth\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider implements UserProvider
 {
+  /** @var string */
+  protected $model;
+
+  public function __construct($app, $model = Customer::class)
+  {
+    parent::__construct($app);
+    $this->model = $model;
+  }
   /**
    * Register any application authentication / authorization services.
    *
@@ -19,7 +27,7 @@ class AuthServiceProvider extends ServiceProvider implements UserProvider
   public function boot()
   {
     Auth::provider('netflex', function ($app, array $config) {
-      return new static($app);
+      return new static($app, $config['model'] ?? Customer::class);
     });
   }
 
@@ -31,7 +39,7 @@ class AuthServiceProvider extends ServiceProvider implements UserProvider
    */
   public function retrieveById($identifier)
   {
-    return Customer::find($identifier);
+    return $this->model::find($identifier);
   }
 
   /**
@@ -72,7 +80,7 @@ class AuthServiceProvider extends ServiceProvider implements UserProvider
       return;
     }
 
-    return Customer::authenticate($credentials);
+    return $this->model::authenticate($credentials);
   }
 
   /**
@@ -84,6 +92,6 @@ class AuthServiceProvider extends ServiceProvider implements UserProvider
    */
   public function validateCredentials(Authenticatable $user, array $credentials)
   {
-    return !!(Customer::authenticate($credentials));
+    return !!($this->model::authenticate($credentials));
   }
 }

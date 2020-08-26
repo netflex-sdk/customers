@@ -45,6 +45,11 @@ class Customer extends Model implements Authenticatable
   protected $resolvableField = 'mail';
 
   /**
+   * @var string|null Defines which (if any) field should be used to perform token based authentication
+   * */
+  protected $tokenField = null;
+
+  /**
    * Retrieves a record by key
    *
    * @param int|null $relationId
@@ -165,6 +170,18 @@ class Customer extends Model implements Authenticatable
    */
   public static function authenticate($credentials)
   {
+    if (count($credentials) && array_key_exists('api_token', $credentials)) {
+      $tokenField = with(new static)->tokenField;
+
+      if ($tokenField !== null) {
+        try {
+          return static::where($tokenField, $credentials['api_token'])->first();
+        } catch (Exception $e) {
+          return;
+        }
+      }
+    }
+
     $emailOrUsername = $credentials['email'] ?? $credentials['mail'] ?? $credentials['username'] ?? null;
     $field = (array_key_exists('email', $credentials) || array_key_exists('mail', $credentials)) ? 'mail' : (array_key_exists('username', $credentials) ? 'username' : null);
     $group = $credentials['group'] ?? null;

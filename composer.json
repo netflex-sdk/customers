@@ -26,15 +26,15 @@
   },
   "require": {
     "php": "^7.3",
-    "illuminate/auth": "^7.0",
-    "illuminate/contracts": "^7.0",
-    "netflex/api": "^2.0",
-    "netflex/query-builder": "^2.0",
-    "netflex/support": "^2.0"
+    "illuminate/auth": "^8.0",
+    "illuminate/contracts": "^8.0",
+    "netflex/api": "^3.0",
+    "netflex/query-builder": "^3.0",
+    "netflex/support": "^3.0"
   },
   "require-dev": {
-    "illuminate/container": "^7.0",
-    "illuminate/support": "^7.0",
+    "illuminate/container": "^8.0",
+    "illuminate/support": "^8.0",
     "larapack/dd": "^1.1",
     "vlucas/phpdotenv": "^3.6"
   },

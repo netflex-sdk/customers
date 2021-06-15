@@ -3,8 +3,11 @@
 namespace Netflex\Customers;
 
 use Exception;
-use Netflex\API\Facades\API;
+
+use Illuminate\Support\Collection;
 use Illuminate\Contracts\Auth\Authenticatable;
+
+use Netflex\API\Facades\API;
 use Netflex\Query\QueryableModel as Model;
 
 /**
@@ -34,6 +37,7 @@ use Netflex\Query\QueryableModel as Model;
  * @property bool $password_reset
  * @property SegmentData[] $segmentData
  * @property GroupCollection[] $groups
+ * @property ConsentAssignment[] $consents
  * @property-read array $channels
  **/
 class Customer extends Model implements Authenticatable
@@ -217,16 +221,134 @@ class Customer extends Model implements Authenticatable
    */
   public function getChannelsAttribute()
   {
-    $channels = [];
+    return ['mail', 'sms'];
+  }
 
-    if (!$this->no_newsletter) {
-      $channels[] = 'mail';
+  /**
+   * Retrives all consent assignment of the given consent, or all assignments if none specified
+   * 
+   * @param Consent|int|null $consent
+   * @return ConsentAssignment[]
+   */
+  public function getConsents($consent = null)
+  {
+    return collect(API::get('relations/consents/customer/' . $this->id, true))
+      ->filter(function ($attributes) use ($consent) {
+        if (!$consent) {
+          return true;
+        }
+
+        return $attributes['consent']['id'] == (($consent instanceof Consent) ? $consent->id : $consent);
+      })
+      ->values()
+      ->map(function ($consent) {
+        $consent['customer_id'] = $this->id;
+        return ConsentAssignment::newFromBuilder($consent);
+      });
+  }
+
+  /**
+   * @return ConsentAssignment[]
+   */
+  public function getConsentsAttribute()
+  {
+    return $this->getConsents();
+  }
+
+  /**
+   * Determines if the customer has a currently active consent assignment for the given consent
+   * 
+   * @param Consent|int $consent
+   * @return boolean
+   */
+  public function hasConsent($consent)
+  {
+    if ($this->getConsent($consent)) {
+      return true;
     }
 
-    if (!$this->no_sms) {
-      $channels[] = 'sms';
+    return false;
+  }
+
+  /**
+   * Retrives the currently active consent assignment for the given consent (or null if none)
+   *
+   * @param Consent|int $consent
+   * @return ConsentAssignment|null
+   */
+  public function getConsent($consent)
+  {
+    /** @var Collection $consents */
+    $consents = $this->getConsents($consent);
+    $activeConsent = null;
+
+    $consents = $consents->sort(function (ConsentAssignment $a, ConsentAssignment $b) {
+      if ($a->revoked_timestamp && $b->revoked_timestamp) {
+        return strcmp($a->revoked_timestamp->toDateTimeString(), $b->revoked_timestamp->toDateTimeString());
+      }
+
+      if (!$a->revoked_timestamp && !$b->revoked_timestamp) {
+        return strcmp($a->timestamp->toDateTimeString(), $b->timestamp->toDateTimeString());
+      }
+
+      if ($a->revoked_timestamp && !$b->revoked_timestamp) {
+        return strcmp($a->revoked_timestamp->toDateTimeString(), $b->timestamp->toDateTimeString());
+      }
+
+      if (!$a->revoked_timestamp && $b->revoked_timestamp) {
+        return strcmp($a->timestamp->toDateTimeString(), $b->revoked_timestamp->toDateTimeString());
+      }
+
+      return strcmp($a->timestamp->toDateTimeString(), $b->revoked_timestamp->toDateTimeString());
+    });
+
+    foreach ($consents as $consent) {
+      /** @var ConsentAssignment $consent */
+      if ($consent->active && !$consent->revoked_timestamp) {
+        $activeConsent = $consent;
+      }
     }
 
-    return $channels;
+    return $activeConsent ? $activeConsent : null;
+  }
+
+  /**
+   * If customer already has an active consent assignment for the given consent, the previous assignment will get revoked
+   * 
+   * @param Consent|int $consent
+   * @param string $source
+   * @param array $options
+   * @return void
+   */
+  public function addConsent($consent, $source, $options = [])
+  {
+    if ($activeConsent = $this->getConsent($consent)) {
+      $activeConsent->revoke();
+    }
+
+    $options['source'] = $source;
+    $assignment_id = ConsentAssignment::create($consent, $this, $options);
+
+    /** @var Collection $consents */
+    $consents = $this->getConsents(($consent instanceof Consent) ? $consent->id : $consent);
+
+    return $consents->first(function (ConsentAssignment $consent) use ($assignment_id) {
+      return $consent->assignment_id == $assignment_id;
+    });
+  }
+
+  /**
+   * If the customer has an active consent assignment for the given consent, the assignment gets revoked
+   *
+   * @param Consent|int $consent
+   * @return boolean
+   */
+  public function revokeConsent($consent)
+  {
+    if ($activeConsent = $this->getConsent($consent)) {
+      return $activeConsent->revoke();
+    }
+
+    return false;
   }
 }

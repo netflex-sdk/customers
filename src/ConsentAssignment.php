@@ -140,7 +140,7 @@ class ConsentAssignment implements JsonSerializable, Jsonable
             'customer_id' => ($customer instanceof Customer) ? $customer->id : $customer,
             'consent_id' => ($consent instanceof Consent) ? $consent->id : $consent,
             'source' => $options['source'] ?? null,
-            'comment' => $options['source'] ?? null,
+            'comment' => $options['comment'] ?? null,
             'timestamp' => $timestamp,
             'ip' => $ip
         ]);

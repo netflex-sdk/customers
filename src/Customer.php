@@ -7,7 +7,6 @@ use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Contracts\Auth\Authenticatable;
 
-use Netflex\API\Facades\API;
 use Netflex\Query\QueryableModel as Model;
 
 /**
@@ -62,7 +61,7 @@ class Customer extends Model implements Authenticatable
    */
   protected function performRetrieveRequest(?int $relationId = null, $key)
   {
-    return API::get('relations/customers/customer/' . $key, true);
+    return $this->getConnection()->get('relations/customers/customer/' . $key, true);
   }
 
   /**
@@ -74,7 +73,7 @@ class Customer extends Model implements Authenticatable
    */
   protected function performInsertRequest(?int $relationId = null, array $attributes = [])
   {
-    $response = API::post('relations/customers/customer', $attributes);
+    $response = $this->getConnection()->post('relations/customers/customer', $attributes);
 
     return $response->customer_id;
   }
@@ -89,7 +88,7 @@ class Customer extends Model implements Authenticatable
    */
   protected function performUpdateRequest(?int $relationId = null, $key, $attributes = [])
   {
-    return API::put('relations/customers/customer/' . $key, $attributes);
+    return $this->getConnection()->put('relations/customers/customer/' . $key, $attributes);
   }
 
   /**
@@ -132,6 +131,23 @@ class Customer extends Model implements Authenticatable
   public function getAuthPassword()
   {
     return null;
+  }
+
+  /**
+   * Set the password for the user.
+   * @param string $password
+   */
+  public function setAuthPassword ($password)
+  {
+    try {
+      $this->getConnection()->put("relations/customers/auth/force/{$this->id}", [
+        'password' => $password
+      ]);
+
+      return true;
+    } catch (Exception $e) {
+      return false;
+    }
   }
 
   /**
@@ -186,12 +202,14 @@ class Customer extends Model implements Authenticatable
       }
     }
 
+    $model = new static;
+
     $emailOrUsername = $credentials['email'] ?? $credentials['mail'] ?? $credentials['username'] ?? null;
     $field = (array_key_exists('email', $credentials) || array_key_exists('mail', $credentials)) ? 'mail' : (array_key_exists('username', $credentials) ? 'username' : null);
     $group = $credentials['group'] ?? null;
 
     try {
-      $response = API::post('relations/customers/auth', [
+      $response = $model->getConnection()->post('relations/customers/auth', [
         'username' => $emailOrUsername,
         'password' => $credentials['password'] ?? null,
         'field' => $field,
@@ -232,7 +250,7 @@ class Customer extends Model implements Authenticatable
    */
   public function getConsents($consent = null)
   {
-    return collect(API::get('relations/consents/customer/' . $this->id, true))
+    return collect($this->getConnection()->get('relations/consents/customer/' . $this->id, true))
       ->filter(function ($attributes) use ($consent) {
         if (!$consent) {
           return true;

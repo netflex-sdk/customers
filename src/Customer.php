@@ -134,6 +134,23 @@ class Customer extends Model implements Authenticatable
   }
 
   /**
+   * Set the password for the user.
+   * @param string $password
+   */
+  public function setAuthPassword ($password)
+  {
+    try {
+      $this->getConnection()->put("relations/customers/auth/force/{$this->id}", [
+        'password' => $password
+      ]);
+
+      return true;
+    } catch (Exception $e) {
+      return false;
+    }
+  }
+
+  /**
    * Get the token value for the "remember me" session.
    *
    * @return string

@@ -48,6 +48,13 @@ class Customer extends Model implements Authenticatable
   protected $resolvableField = 'mail';
 
   /**
+   * Indicates if we should respect the models publishing status when retrieving it.
+   *
+   * @var bool
+   */
+  protected $respectPublishingStatus = false;
+
+  /**
    * @var string|null Defines which (if any) field should be used to perform token based authentication
    * */
   protected $tokenField = null;
@@ -137,7 +144,7 @@ class Customer extends Model implements Authenticatable
    * Set the password for the user.
    * @param string $password
    */
-  public function setAuthPassword ($password)
+  public function setAuthPassword($password)
   {
     try {
       $this->getConnection()->put("relations/customers/auth/force/{$this->id}", [

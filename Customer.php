@@ -49,6 +49,10 @@ class Customer extends Model implements Authenticatable
 
   protected $resolvableField = 'mail';
 
+  protected $fillable = [
+    'mail',
+  ];
+
   /**
    * Indicates if we should respect the models publishing status when retrieving it.
    *
@@ -68,7 +72,7 @@ class Customer extends Model implements Authenticatable
    * @param mixed $key
    * @return array|null
    */
-  protected function performRetrieveRequest(?int $relationId = null, mixed $key = null)
+  protected function performRetrieveRequest(?int $relationId = null, $key)
   {
     return $this->getConnection()->get('relations/customers/customer/' . $key, true);
   }
@@ -95,7 +99,7 @@ class Customer extends Model implements Authenticatable
    * @param array $attributes
    * @return void
    */
-  protected function performUpdateRequest(?int $relationId = null, mixed $key = null, array $attributes = [])
+  protected function performUpdateRequest(?int $relationId = null, $key, $attributes = [])
   {
     return $this->getConnection()->put('relations/customers/customer/' . $key, $attributes);
   }
@@ -107,7 +111,7 @@ class Customer extends Model implements Authenticatable
    * @param mixed $key
    * @return bool
    */
-  protected function performDeleteRequest(?int $relationId = null, mixed $key = null)
+  protected function performDeleteRequest(?int $relationId = null, $key)
   {
     return false;
   }
@@ -301,7 +305,7 @@ class Customer extends Model implements Authenticatable
 
   /**
    * Determines if the customer has a currently active consent assignment for the given consent
-   * 
+   *
    * @param Consent|int $consent
    * @return boolean
    */
@@ -358,7 +362,7 @@ class Customer extends Model implements Authenticatable
 
   /**
    * Assign consent to customer
-   * 
+   *
    * @param Consent|int $consent
    * @param string $source
    * @param array $options

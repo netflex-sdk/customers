@@ -72,7 +72,7 @@ class Customer extends Model implements Authenticatable
    * @param mixed $key
    * @return array|null
    */
-  protected function performRetrieveRequest(?int $relationId = null, $key)
+  protected function performRetrieveRequest(?int $relationId = null, mixed $key = null)
   {
     return $this->getConnection()->get('relations/customers/customer/' . $key, true);
   }
@@ -99,7 +99,7 @@ class Customer extends Model implements Authenticatable
    * @param array $attributes
    * @return void
    */
-  protected function performUpdateRequest(?int $relationId = null, $key, $attributes = [])
+  protected function performUpdateRequest(?int $relationId = null, mixed $key = null, array $attributes = [])
   {
     return $this->getConnection()->put('relations/customers/customer/' . $key, $attributes);
   }
@@ -111,7 +111,7 @@ class Customer extends Model implements Authenticatable
    * @param mixed $key
    * @return bool
    */
-  protected function performDeleteRequest(?int $relationId = null, $key)
+  protected function performDeleteRequest(?int $relationId = null, mixed $key = null)
   {
     return false;
   }

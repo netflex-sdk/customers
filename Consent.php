@@ -114,6 +114,7 @@ class Consent implements JsonSerializable, Jsonable
     /**
      * @return array
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

@@ -167,7 +167,6 @@ class ConsentAssignment implements JsonSerializable, Jsonable
     /**
      * @return array
      */
-    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

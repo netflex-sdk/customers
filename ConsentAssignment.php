@@ -2,11 +2,10 @@
 
 namespace Netflex\Customers;
 
-use Carbon\Month;
-use Carbon\WeekDay;
-use DateTimeInterface;
-use GuzzleHttp\Exception\GuzzleException;
 use JsonSerializable;
+
+use Netflex\Customers\Consent;
+use Netflex\Customers\Customer;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Contracts\Support\Jsonable;
@@ -14,7 +13,6 @@ use Illuminate\Support\Facades\Request;
 
 use Netflex\API\Facades\API;
 use Netflex\Support\Accessors;
-use ReturnTypeWillChange;
 
 /**
  * @property int $assignment_id
@@ -30,24 +28,23 @@ class ConsentAssignment implements JsonSerializable, Jsonable
 {
     use Accessors;
 
-    protected ?int $customer_id;
+    /** @var int */
+    protected $customer_id;
 
     /**
      * @param array $attributes
-     * @param int|null $customer_id
+     * @param int $customer_id
      */
-    protected function __construct(
-        array $attributes = [],
-        int|null $customer_id = null,
-    ) {
+    protected function __construct($attributes = [], $customer_id = null)
+    {
         $this->attributes = $attributes;
-        $this->customer_id = $customer_id;
+        $this->custoner_id = $customer_id;
     }
 
     /**
      * @return int
      */
-    public function getIdAttribute(): int
+    public function getIdAttribute()
     {
         return $this->assignment_id;
     }
@@ -58,9 +55,8 @@ class ConsentAssignment implements JsonSerializable, Jsonable
      * @param array $consent
      * @return Consent
      */
-    public function getConsentAttribute(
-        array $consent,
-    ): Consent {
+    public function getConsentAttribute($consent)
+    {
         return Consent::newFromBuilder($consent);
     }
 
@@ -68,7 +64,7 @@ class ConsentAssignment implements JsonSerializable, Jsonable
      * @param string $assignment_id
      * @return int
      */
-    public function getAssignmentIdAttribute(string $assignment_id): int
+    public function getAssignmentIdAttribute($assignment_id)
     {
         return (int) $assignment_id;
     }
@@ -77,51 +73,42 @@ class ConsentAssignment implements JsonSerializable, Jsonable
      * @param string $active
      * @return boolean
      */
-    public function getActiveAttribute(string $active): bool
+    public function getActiveAttribute($active)
     {
         return (bool) $active;
     }
 
     /**
-     * @param DateTimeInterface|WeekDay|Month|string|int|float|null $timestamp
+     * @param string $timestamp
      * @return Carbon
      */
-    public function getTimestampAttribute(
-        DateTimeInterface|WeekDay|Month|string|int|float|null $timestamp,
-    ): Carbon {
+    public function getTimestampAttribute($timestamp)
+    {
         return Carbon::parse($timestamp);
     }
 
     /**
-     * @param string|null $revoked_timestamp
+     * @param string $revoked_timestamp
      * @return Carbon|null
      */
-    public function getRevokedTimestampAttribute(?string $revoked_timestamp): ?Carbon
+    public function getRevokedTimestampAttribute($revoked_timestamp)
     {
         if ($revoked_timestamp) {
             return Carbon::parse($revoked_timestamp);
         }
-
-        return null;
     }
 
     /**
      * Revokes the assignment
      *
-     * @param string|Carbon|null $timestamp
+     * @param Carbon|string|null $timestamp
      * @return boolean
-     * @throws GuzzleException
      */
-    public function revoke(Carbon|string|null $timestamp = null): bool
+    public function revoke($timestamp = null)
     {
-        API::put(
-            'relations/consents/assignment/revoke/' . $this->assignment_id,
-            [
-                'revoke_timestamp' => $timestamp
-                    ? (($timestamp instanceof Carbon)
-                        ? $timestamp->toDateTimeString() : $timestamp) : null,
-            ],
-        );
+        API::put('relations/consents/assignment/revoke/' . $this->assignment_id, [
+            'revoke_timestamp' => $timestamp ? (($timestamp instanceof Carbon) ? $timestamp->toDateTimeString() : $timestamp) : null
+        ]);
 
         return true;
     }
@@ -129,40 +116,33 @@ class ConsentAssignment implements JsonSerializable, Jsonable
     /**
      * Creates a assignment
      *
-     * @param int|Consent $consent
-     * @param int|Customer $customer
+     * @param Consent|int $consent
+     * @param Customer|int $customer
      * @param array $options
      * @return int Assignment id
-     * @throws GuzzleException
      */
-    public static function create(
-        Consent|int $consent,
-        int|\Netflex\Customers\Customer $customer,
-        array $options = [],
-    ): int {
+    public static function create($consent, $customer, $options = [])
+    {
         $timestamp = null;
+        $ip = null;
 
         if (isset($options['timestamp'])) {
-            $timestamp = ($options['timestamp'] instanceof Carbon)
-                ? $options['timestamp']->toDateTimeString()
-                : $options['timestamp'];
+            $timestamp = ($options['timestamp'] instanceof Carbon) ? $options['timestamp']->toDateTimeString() : $options['timestamp'];
         }
 
         if (array_key_exists('ip', $options)) {
-            $ip = $options['ip'];
+            $ip = $ip;
         } else {
             $ip = Request::ip();
         }
 
         $response = API::post('relations/consents/customer', [
-            'customer_id' => ($customer instanceof Customer) ? $customer->id
-                : $customer,
-            'consent_id' => ($consent instanceof Consent) ? $consent->id
-                : $consent,
+            'customer_id' => ($customer instanceof Customer) ? $customer->id : $customer,
+            'consent_id' => ($consent instanceof Consent) ? $consent->id : $consent,
             'source' => $options['source'] ?? null,
             'comment' => $options['comment'] ?? null,
             'timestamp' => $timestamp,
-            'ip' => $ip,
+            'ip' => $ip
         ]);
 
         return $response->assignment_id;
@@ -172,7 +152,7 @@ class ConsentAssignment implements JsonSerializable, Jsonable
      * @param array $attributes
      * @return static
      */
-    public static function newFromBuilder(array $attributes): static
+    public static function newFromBuilder($attributes)
     {
         $customer_id = null;
 
@@ -187,20 +167,17 @@ class ConsentAssignment implements JsonSerializable, Jsonable
     /**
      * @return array
      */
-    #[ReturnTypeWillChange]
-    public function jsonSerialize(): array
+    public function jsonSerialize()
     {
         return [
             'assignment_id' => $this->assignment_id,
             'consent' => $this->consent,
             'active' => $this->active,
             'timestamp' => $this->timestamp->toDateTimeString(),
-            'revoked_timestamp' => $this->revoked_timestamp
-                ? $this->revoked_timestamp->toDateTimeString()
-                : null,
+            'revoked_timestamp' => $this->revoked_timestamp ? $this->revoked_timestamp->toDateTimeString() : null,
             'source' => $this->source,
             'ip' => $this->ip,
-            'comment' => $this->comment,
+            'comment' => $this->comment
         ];
     }
 
@@ -208,7 +185,7 @@ class ConsentAssignment implements JsonSerializable, Jsonable
      * @param integer $options
      * @return string
      */
-    public function toJson($options = 0): string
+    public function toJson($options = 0)
     {
         return json_encode($this->jsonSerialize(), $options);
     }

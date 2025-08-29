@@ -3,7 +3,6 @@
 namespace Netflex\Customers;
 
 use Carbon\Carbon;
-use DateTime;
 use Netflex\Support\ReactiveObject;
 
 /**
@@ -66,7 +65,7 @@ class SegmentData extends ReactiveObject
   }
 
   /**
-   * @param string|Datetime $birthday
+   * @param string|datetime $birthday
    * @return mixed
    */
   public function getBirthdayAttribute($birthday)
